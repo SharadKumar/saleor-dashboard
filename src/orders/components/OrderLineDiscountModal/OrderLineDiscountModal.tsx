@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import {
   Button,
   Card,
@@ -14,6 +15,10 @@ import CardTitle from "@saleor/components/CardTitle";
 import PriceField from "@saleor/components/PriceField";
 import RadioGroupField from "@saleor/components/RadioGroupField";
 import { buttonMessages } from "@saleor/intl";
+import {
+  DiscountConsumer,
+  DiscountProviderValues
+} from "@saleor/products/components/OrderDraftDiscountProvider/DiscountProvider";
 import React, { ChangeEvent, MutableRefObject, useState } from "react";
 import { useIntl } from "react-intl";
 import { defineMessages } from "react-intl";
@@ -102,7 +107,6 @@ interface OrderLineDiscountModalProps {
   onClose: () => void;
   onRemove: () => void;
   modalType: OrderDiscountType;
-  isOpen: boolean;
   anchorRef: MutableRefObject<any>;
   existingDiscount: OrderDiscountData;
   dialogPlacement: PopperPlacementType;
@@ -113,7 +117,6 @@ const OrderLineDiscountModal: React.FC<OrderLineDiscountModalProps> = ({
   maxAmount = 0,
   onConfirm,
   modalType,
-  isOpen,
   anchorRef,
   onClose,
   onRemove,
@@ -201,66 +204,73 @@ const OrderLineDiscountModal: React.FC<OrderLineDiscountModalProps> = ({
   const displayRemoveButton = !!existingDiscount;
 
   return (
-    <Popper
-      open={isOpen}
-      anchorEl={anchorRef.current}
-      className={classes.container}
-      placement={dialogPlacement}
-    >
-      <Card>
-        <CardTitle title={intl.formatMessage(dialogTitle)} />
-        <CardContent>
-          <RadioGroupField
-            innerContainerClassName={classes.radioContainer}
-            choices={discountTypeChoices}
-            name="discountType"
-            variant="inlineJustify"
-            value={discountType}
-            onChange={event => setDiscountType(event.target.value)}
-          />
-          <CardSpacer />
-          <PriceField
-            label={intl.formatMessage(messages.discountValueLabel)}
-            error={isValueError}
-            hint={isValueError && intl.formatMessage(messages.invalidValue)}
-            value={discountValue}
-            onChange={handleSetDiscountValue}
-            currencySymbol={valueFieldSymbol}
-          />
-          <CardSpacer />
-          <Typography>
-            {intl.formatMessage(messages.discountReasonLabel)}
-          </Typography>
-          <TextField
-            className={classes.reasonInput}
-            label={intl.formatMessage(messages.discountReasonLabel)}
-            value={discountReason}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setDiscountReason(event.target.value)
-            }
-          />
-        </CardContent>
-        <DialogButtons
-          onConfirm={handleConfirm}
-          onClose={onClose}
-          disabled={isSubmitDisabled}
-          showBackButton={!displayRemoveButton}
+    <DiscountConsumer>
+      {({
+        isDiscountDialogOpen,
+        currentDiscountType
+      }: DiscountProviderValues) => (
+        <Popper
+          open={isDiscountDialogOpen && currentDiscountType === modalType}
+          anchorEl={anchorRef.current}
+          className={classes.container}
+          placement={dialogPlacement}
         >
-          {displayRemoveButton && (
-            <div className={classes.buttonWrapper}>
-              <Button
-                data-test="button-remove"
-                onClick={onRemove}
-                variant="contained"
-                className={classes.removeButton}
-              >
-                {intl.formatMessage(buttonMessages.remove)}
-              </Button>
-            </div>
-          )}
-        </DialogButtons>
-      </Card>
-    </Popper>
+          <Card>
+            <CardTitle title={intl.formatMessage(dialogTitle)} />
+            <CardContent>
+              <RadioGroupField
+                innerContainerClassName={classes.radioContainer}
+                choices={discountTypeChoices}
+                name="discountType"
+                variant="inlineJustify"
+                value={discountType}
+                onChange={event => setDiscountType(event.target.value)}
+              />
+              <CardSpacer />
+              <PriceField
+                label={intl.formatMessage(messages.discountValueLabel)}
+                error={isValueError}
+                hint={isValueError && intl.formatMessage(messages.invalidValue)}
+                value={discountValue}
+                onChange={handleSetDiscountValue}
+                currencySymbol={valueFieldSymbol}
+              />
+              <CardSpacer />
+              <Typography>
+                {intl.formatMessage(messages.discountReasonLabel)}
+              </Typography>
+              <TextField
+                className={classes.reasonInput}
+                label={intl.formatMessage(messages.discountReasonLabel)}
+                value={discountReason}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setDiscountReason(event.target.value)
+                }
+              />
+            </CardContent>
+            <DialogButtons
+              onConfirm={handleConfirm}
+              onClose={onClose}
+              disabled={isSubmitDisabled}
+              showBackButton={!displayRemoveButton}
+            >
+              {displayRemoveButton && (
+                <div className={classes.buttonWrapper}>
+                  <Button
+                    data-test="button-remove"
+                    onClick={onRemove}
+                    variant="contained"
+                    className={classes.removeButton}
+                  >
+                    {intl.formatMessage(buttonMessages.remove)}
+                  </Button>
+                </div>
+              )}
+            </DialogButtons>
+          </Card>
+        </Popper>
+      )}
+    </DiscountConsumer>
   );
 };
 

@@ -848,6 +848,7 @@ input ChannelUpdateInput {
   slug: String
 }
 
+
 type Checkout implements Node & ObjectWithMetadata {
   created: DateTime!
   lastChange: DateTime!
@@ -895,6 +896,31 @@ type CheckoutComplete {
   confirmationNeeded: Boolean!
   confirmationData: JSONString
   checkoutErrors: [CheckoutError!]!
+}
+
+
+type OrderLineDiscountAdd {
+  errors: [Error!]! @deprecated(reason: "Use typed errors with error codes. This field will be removed after 2020-07-31.")
+  order: Order
+  orderErrors: [OrderError!]! 
+}
+
+type OrderDiscountAdd {
+  errors: [Error!]! @deprecated(reason: "Use typed errors with error codes. This field will be removed after 2020-07-31.")
+  order: Order
+  orderErrors: [OrderError!]!
+}
+
+input OrderLineDiscountAddInput {
+  value: PositiveDecimal!
+  reason: String!
+  calculationMode: DiscountValueTypeEnum
+}
+ 
+input OrderDiscountAddInput {
+  value: PositiveDecimal!
+  reason: String!
+  calculationMode: DiscountValueTypeEnum
 }
 
 type CheckoutCountableConnection {
@@ -2567,6 +2593,8 @@ type Mutation {
   shopSettingsTranslate(input: ShopSettingsTranslationInput!, languageCode: LanguageCodeEnum!): ShopSettingsTranslate
   shopAddressUpdate(input: AddressInput): ShopAddressUpdate
   orderSettingsUpdate(input: OrderSettingsUpdateInput!): OrderSettingsUpdate
+  orderDiscountAdd(input: OrderDiscountAddInput!, id: ID): OrderDiscountAdd
+  orderLineDiscountAdd(input: OrderLineDiscountAddInput!, id: ID): OrderLineDiscountAdd
   shippingMethodChannelListingUpdate(id: ID!, input: ShippingMethodChannelListingInput!): ShippingMethodChannelListingUpdate
   shippingMethodZipCodeRulesCreate(input: ShippingZipCodeRulesCreateInput!, shippingMethodId: ID!): ShippingZipCodeRulesCreate
   shippingMethodZipCodeRulesDelete(id: ID!): ShippingZipCodeRulesDelete
@@ -5847,3 +5875,4 @@ union _Entity = Address | User | Group | App | ProductVariant | Product | Produc
 type _Service {
   sdl: String
 }
+

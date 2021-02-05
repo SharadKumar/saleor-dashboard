@@ -29,7 +29,7 @@ import { getMutationState, getStringOrPlaceholder, maybe } from "../../../misc";
 import {
   DiscountConsumer,
   DiscountProviderValues
-} from "../../../products/components/OrderDraftDiscountProvider/DiscountProvider";
+} from "../../../products/components/OrderDraftDiscountProvider/OrderDiscountProvider";
 import { productUrl } from "../../../products/urls";
 import {
   FulfillmentStatus,
@@ -531,10 +531,6 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ id, params }) => {
                               onShippingMethodEdit={() =>
                                 openModal("edit-shipping")
                               }
-                              // onOrderDiscountAdd={addOrderDiscount}
-                              // onOrderLineDiscountAdd={addOrderLineDiscount}
-                              // removeOrderDiscount={removeOrderDiscount}
-                              // removeOrderLineDiscount={removeOrderLineDiscount}
                               onOrderLineRemove={id =>
                                 orderLineDelete.mutate({ id })
                               }

@@ -90,14 +90,16 @@ const OrderDraftDetailsSummary: React.FC<OrderDraftDetailsSummaryProps> = props 
     orderDiscount,
     addOrderDiscount,
     removeOrderDiscount,
-    isDiscountDialogOpen,
     openDialog,
     closeDialog
   } = props;
 
   const intl = useIntl();
   const classes = useStyles(props);
-  const discountCalculator = useDiscountCalculator(order, orderDiscount);
+  const discountCalculator = useDiscountCalculator(
+    order.total.gross,
+    orderDiscount
+  );
 
   const popperAnchorRef = useRef<HTMLTableRowElement | null>(null);
 
@@ -152,12 +154,11 @@ const OrderDraftDetailsSummary: React.FC<OrderDraftDetailsSummaryProps> = props 
       <tbody>
         <tr className={classes.relativeRow} ref={popperAnchorRef}>
           <td>
-            <Link onClick={openDialog}>
+            <Link onClick={openDialog(ORDER_DISCOUNT)}>
               {intl.formatMessage(discountTitle)}
             </Link>
             <OrderLineDiscountModal
               anchorRef={popperAnchorRef}
-              isOpen={isDiscountDialogOpen}
               onClose={closeDialog}
               currency={total.gross.currency}
               modalType={ORDER_DISCOUNT}

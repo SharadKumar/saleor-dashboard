@@ -1,0 +1,195 @@
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { DebounceForm } from "@saleor/components/DebounceForm";
+import Form from "@saleor/components/Form";
+import Link from "@saleor/components/Link";
+import Money from "@saleor/components/Money";
+import TableCellAvatar, {
+  AVATAR_MARGIN
+} from "@saleor/components/TableCellAvatar";
+import { DiscountProviderValues } from "@saleor/products/components/OrderDraftDiscountProvider/DiscountProvider";
+import createNonNegativeValueChangeHandler from "@saleor/utils/handlers/nonNegativeValueChangeHandler";
+import React, { useRef } from "react";
+
+import { maybe } from "../../../misc";
+import { OrderDetails_order_lines } from "../../types/OrderDetails";
+import OrderLineDiscountModal from "../OrderLineDiscountModal";
+import useDiscountCalculator from "../OrderLineDiscountModal/DiscountCalculator";
+import { ORDER_LINE_DISCOUNT } from "../OrderLineDiscountModal/types";
+
+export interface FormData {
+  quantity: number;
+}
+
+const useStyles = makeStyles(
+  theme => ({
+    colAction: {
+      "&:last-child": {
+        paddingRight: 0
+      },
+      width: 76 + theme.spacing(0.5)
+    },
+    colName: {
+      width: "auto"
+    },
+    colNameLabel: {
+      marginLeft: AVATAR_MARGIN
+    },
+    colPrice: {
+      textAlign: "right",
+      width: 150
+    },
+    colQuantity: {
+      textAlign: "right",
+      width: 80
+    },
+    colTotal: {
+      textAlign: "right",
+      width: 150
+    },
+    strike: {
+      textDecoration: "line-through",
+      color: theme.palette.grey[400]
+    },
+    errorInfo: {
+      color: theme.palette.error.main
+    },
+    quantityField: {
+      "& input": {
+        padding: "12px 12px 10px",
+        textAlign: "right"
+      },
+      width: 60
+    },
+    table: {
+      tableLayout: "fixed"
+    }
+  }),
+  { name: "OrderDraftDetailsProducts" }
+);
+
+interface TableLineProps extends DiscountProviderValues {
+  line: OrderDetails_order_lines;
+  onOrderLineChange: (id: string, data: FormData) => void;
+  onOrderLineRemove: (id: string) => void;
+}
+
+const TableLine: React.FC<TableLineProps> = ({
+  line,
+  onOrderLineChange,
+  onOrderLineRemove,
+  orderLineDiscounts,
+  addOrderLineDiscount,
+  removeOrderLineDiscount,
+  openDialog,
+  closeDialog
+}) => {
+  const classes = useStyles({});
+  const popperAnchorRef = useRef<HTMLTableRowElement | null>(null);
+  const { id, thumbnail, productName, productSku, quantity, unitPrice } = line;
+  const existingDiscount = orderLineDiscounts[id];
+  const discountCalculator = useDiscountCalculator(
+    unitPrice.net,
+    existingDiscount
+  );
+
+  const getUnitPriceLabel = () => {
+    const money = <Money money={unitPrice.net} />;
+
+    if (existingDiscount) {
+      return (
+        <>
+          <Typography className={classes.strike}>{money}</Typography>
+          <Link onClick={openDialog(ORDER_LINE_DISCOUNT)}>
+            <Money
+              money={discountCalculator.getTotalMoneyIncludingDiscount()}
+            />
+          </Link>
+        </>
+      );
+    }
+
+    return <Link onClick={openDialog(ORDER_LINE_DISCOUNT)}>{money}</Link>;
+  };
+
+  return (
+    <TableRow key={id}>
+      <TableCellAvatar
+        className={classes.colName}
+        thumbnail={maybe(() => thumbnail.url)}
+      >
+        <Typography variant="body2">{productName}</Typography>
+        <Typography variant="caption">{productSku}</Typography>
+      </TableCellAvatar>
+      <TableCell className={classes.colQuantity}>
+        <Form
+          initial={{ quantity }}
+          onSubmit={data => onOrderLineChange(id, data)}
+        >
+          {({ change, data, hasChanged, submit }) => {
+            const handleQuantityChange = createNonNegativeValueChangeHandler(
+              change
+            );
+
+            return (
+              <DebounceForm
+                change={handleQuantityChange}
+                submit={hasChanged ? submit : undefined}
+                time={200}
+              >
+                {debounce => (
+                  <TextField
+                    className={classes.quantityField}
+                    fullWidth
+                    name="quantity"
+                    type="number"
+                    value={data.quantity}
+                    onChange={debounce}
+                    onBlur={submit}
+                    inputProps={{
+                      min: 1
+                    }}
+                  />
+                )}
+              </DebounceForm>
+            );
+          }}
+        </Form>
+      </TableCell>
+      <TableCell className={classes.colPrice} ref={popperAnchorRef}>
+        {getUnitPriceLabel()}
+        <OrderLineDiscountModal
+          anchorRef={popperAnchorRef}
+          onClose={closeDialog}
+          currency={unitPrice.currency}
+          modalType={ORDER_LINE_DISCOUNT}
+          maxAmount={unitPrice.gross.amount}
+          onConfirm={addOrderLineDiscount(id)}
+          onRemove={removeOrderLineDiscount(id)}
+          existingDiscount={existingDiscount}
+          dialogPlacement="bottom-end"
+        />
+      </TableCell>
+      <TableCell className={classes.colTotal}>
+        <Money
+          money={{
+            amount: unitPrice.net.amount * quantity,
+            currency: unitPrice.net.currency
+          }}
+        />
+      </TableCell>
+      <TableCell className={classes.colAction}>
+        <IconButton onClick={() => onOrderLineRemove(id)}>
+          <DeleteIcon color="primary" />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export default TableLine;

@@ -1327,6 +1327,12 @@ export interface OrderAddNoteInput {
   message: string;
 }
 
+export interface OrderDiscountAddInput {
+  value: any;
+  reason: string;
+  calculationMode?: DiscountValueTypeEnum | null;
+}
+
 export interface OrderDraftFilterInput {
   customer?: string | null;
   created?: DateRangeInput | null;
@@ -1361,6 +1367,12 @@ export interface OrderFulfillStockInput {
 export interface OrderLineCreateInput {
   quantity: number;
   variantId: string;
+}
+
+export interface OrderLineDiscountAddInput {
+  value: any;
+  reason: string;
+  calculationMode?: DiscountValueTypeEnum | null;
 }
 
 export interface OrderLineInput {

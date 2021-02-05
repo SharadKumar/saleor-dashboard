@@ -6,7 +6,7 @@ import { useIntl } from "react-intl";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import { WindowTitle } from "../components/WindowTitle";
-import { DiscountProvider } from "../products/components/OrderDraftDiscountProvider/DiscountProvider";
+import { DiscountProvider } from "../products/components/OrderDraftDiscountProvider/OrderDiscountProvider";
 import {
   orderDraftListPath,
   OrderDraftListUrlQueryParams,
