@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { OrderDiscountAddInput, OrderErrorCode, OrderEventsEmailsEnum, OrderEventsEnum, FulfillmentStatus, PaymentChargeStatusEnum, OrderStatus, OrderAction, JobStatusEnum } from "./../../types/globalTypes";
+import { OrderDiscountCommonInput, OrderErrorCode, OrderDiscountType, DiscountValueTypeEnum, OrderEventsEmailsEnum, OrderEventsEnum, FulfillmentStatus, PaymentChargeStatusEnum, OrderStatus, OrderAction, JobStatusEnum } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: OrderDiscountAdd
@@ -46,6 +46,22 @@ export interface OrderDiscountAdd_orderDiscountAdd_order_billingAddress {
   postalCode: string;
   streetAddress1: string;
   streetAddress2: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_discounts_amount {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_discounts {
+  __typename: "OrderDiscount";
+  id: string;
+  type: OrderDiscountType;
+  calculationMode: DiscountValueTypeEnum;
+  value: any;
+  reason: string | null;
+  amount: OrderDiscountAdd_orderDiscountAdd_order_discounts_amount;
 }
 
 export interface OrderDiscountAdd_orderDiscountAdd_order_events_relatedOrder {
@@ -99,6 +115,25 @@ export interface OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orde
   quantityAvailable: number;
 }
 
+export interface OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_undiscountedUnitPrice_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_undiscountedUnitPrice_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_undiscountedUnitPrice {
+  __typename: "TaxedMoney";
+  currency: string;
+  gross: OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_undiscountedUnitPrice_gross;
+  net: OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_undiscountedUnitPrice_net;
+}
+
 export interface OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_unitPrice_gross {
   __typename: "Money";
   amount: number;
@@ -132,6 +167,7 @@ export interface OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orde
   productSku: string;
   quantity: number;
   quantityFulfilled: number;
+  undiscountedUnitPrice: OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_undiscountedUnitPrice;
   unitPrice: OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_unitPrice;
   thumbnail: OrderDiscountAdd_orderDiscountAdd_order_fulfillments_lines_orderLine_thumbnail | null;
 }
@@ -163,6 +199,25 @@ export interface OrderDiscountAdd_orderDiscountAdd_order_lines_variant {
   __typename: "ProductVariant";
   id: string;
   quantityAvailable: number;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_lines_undiscountedUnitPrice_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_lines_undiscountedUnitPrice_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_lines_undiscountedUnitPrice {
+  __typename: "TaxedMoney";
+  currency: string;
+  gross: OrderDiscountAdd_orderDiscountAdd_order_lines_undiscountedUnitPrice_gross;
+  net: OrderDiscountAdd_orderDiscountAdd_order_lines_undiscountedUnitPrice_net;
 }
 
 export interface OrderDiscountAdd_orderDiscountAdd_order_lines_unitPrice_gross {
@@ -198,6 +253,7 @@ export interface OrderDiscountAdd_orderDiscountAdd_order_lines {
   productSku: string;
   quantity: number;
   quantityFulfilled: number;
+  undiscountedUnitPrice: OrderDiscountAdd_orderDiscountAdd_order_lines_undiscountedUnitPrice;
   unitPrice: OrderDiscountAdd_orderDiscountAdd_order_lines_unitPrice;
   thumbnail: OrderDiscountAdd_orderDiscountAdd_order_lines_thumbnail | null;
 }
@@ -281,6 +337,24 @@ export interface OrderDiscountAdd_orderDiscountAdd_order_totalCaptured {
   currency: string;
 }
 
+export interface OrderDiscountAdd_orderDiscountAdd_order_undiscountedTotal_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_undiscountedTotal_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDiscountAdd_orderDiscountAdd_order_undiscountedTotal {
+  __typename: "TaxedMoney";
+  net: OrderDiscountAdd_orderDiscountAdd_order_undiscountedTotal_net;
+  gross: OrderDiscountAdd_orderDiscountAdd_order_undiscountedTotal_gross;
+}
+
 export interface OrderDiscountAdd_orderDiscountAdd_order_user {
   __typename: "User";
   id: string;
@@ -332,6 +406,7 @@ export interface OrderDiscountAdd_orderDiscountAdd_order {
   canFinalize: boolean;
   created: any;
   customerNote: string;
+  discounts: OrderDiscountAdd_orderDiscountAdd_order_discounts[] | null;
   events: (OrderDiscountAdd_orderDiscountAdd_order_events | null)[] | null;
   fulfillments: (OrderDiscountAdd_orderDiscountAdd_order_fulfillments | null)[];
   lines: (OrderDiscountAdd_orderDiscountAdd_order_lines | null)[];
@@ -347,6 +422,7 @@ export interface OrderDiscountAdd_orderDiscountAdd_order {
   actions: (OrderAction | null)[];
   totalAuthorized: OrderDiscountAdd_orderDiscountAdd_order_totalAuthorized;
   totalCaptured: OrderDiscountAdd_orderDiscountAdd_order_totalCaptured;
+  undiscountedTotal: OrderDiscountAdd_orderDiscountAdd_order_undiscountedTotal;
   user: OrderDiscountAdd_orderDiscountAdd_order_user | null;
   userEmail: string | null;
   availableShippingMethods: (OrderDiscountAdd_orderDiscountAdd_order_availableShippingMethods | null)[] | null;
@@ -367,6 +443,6 @@ export interface OrderDiscountAdd {
 }
 
 export interface OrderDiscountAddVariables {
-  input: OrderDiscountAddInput;
-  id: string;
+  input: OrderDiscountCommonInput;
+  orderId: string;
 }

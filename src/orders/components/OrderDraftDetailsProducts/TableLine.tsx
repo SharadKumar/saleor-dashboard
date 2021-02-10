@@ -12,7 +12,9 @@ import Money from "@saleor/components/Money";
 import TableCellAvatar, {
   AVATAR_MARGIN
 } from "@saleor/components/TableCellAvatar";
-import { DiscountProviderValues } from "@saleor/products/components/OrderDraftDiscountProvider/DiscountProvider";
+import { DiscountProviderValues } from "@saleor/products/components/OrderDiscountProvider/OrderDiscountProvider";
+import { hasOrderLineDiscount } from "@saleor/products/components/OrderDiscountProvider/utils";
+import { OrderLineDiscountProviderValues } from "@saleor/products/components/OrderLineDiscountProvider/OrderLineDiscountProvider";
 import createNonNegativeValueChangeHandler from "@saleor/utils/handlers/nonNegativeValueChangeHandler";
 import React, { useRef } from "react";
 
@@ -73,7 +75,7 @@ const useStyles = makeStyles(
   { name: "OrderDraftDetailsProducts" }
 );
 
-interface TableLineProps extends DiscountProviderValues {
+interface TableLineProps extends OrderLineDiscountProviderValues {
   line: OrderDetails_order_lines;
   onOrderLineChange: (id: string, data: FormData) => void;
   onOrderLineRemove: (id: string) => void;
@@ -83,7 +85,7 @@ const TableLine: React.FC<TableLineProps> = ({
   line,
   onOrderLineChange,
   onOrderLineRemove,
-  orderLineDiscounts,
+  orderLineDiscount,
   addOrderLineDiscount,
   removeOrderLineDiscount,
   openDialog,
@@ -91,30 +93,31 @@ const TableLine: React.FC<TableLineProps> = ({
 }) => {
   const classes = useStyles({});
   const popperAnchorRef = useRef<HTMLTableRowElement | null>(null);
-  const { id, thumbnail, productName, productSku, quantity, unitPrice } = line;
-  const existingDiscount = orderLineDiscounts[id];
-  const discountCalculator = useDiscountCalculator(
-    unitPrice.net,
-    existingDiscount
-  );
+  const {
+    id,
+    thumbnail,
+    productName,
+    productSku,
+    quantity,
+    unitPrice,
+    undiscountedUnitPrice
+  } = line;
 
   const getUnitPriceLabel = () => {
-    const money = <Money money={unitPrice.net} />;
+    const money = <Money money={undiscountedUnitPrice.net} />;
 
-    if (existingDiscount) {
-      return (
-        <>
-          <Typography className={classes.strike}>{money}</Typography>
-          <Link onClick={openDialog(ORDER_LINE_DISCOUNT)}>
-            <Money
-              money={discountCalculator.getTotalMoneyIncludingDiscount()}
-            />
-          </Link>
-        </>
-      );
-    }
+    // if (!!orderLineDiscount) {
+    //   return (
+    //     <>
+    //       <Typography className={classes.strike}>{money}</Typography>
+    //       <Link onClick={openDialog}>
+    //         <Money money={unitPrice.net} />
+    //       </Link>
+    //     </>
+    //   );
+    // }
 
-    return <Link onClick={openDialog(ORDER_LINE_DISCOUNT)}>{money}</Link>;
+    return <Link onClick={openDialog}>{money}</Link>;
   };
 
   return (
@@ -163,17 +166,17 @@ const TableLine: React.FC<TableLineProps> = ({
       </TableCell>
       <TableCell className={classes.colPrice} ref={popperAnchorRef}>
         {getUnitPriceLabel()}
-        <OrderLineDiscountModal
+        {/* <OrderLineDiscountModal
           anchorRef={popperAnchorRef}
           onClose={closeDialog}
           currency={unitPrice.currency}
           modalType={ORDER_LINE_DISCOUNT}
           maxAmount={unitPrice.gross.amount}
-          onConfirm={addOrderLineDiscount(id)}
-          onRemove={removeOrderLineDiscount(id)}
-          existingDiscount={existingDiscount}
+          onConfirm={addOrderLineDiscount}
+          onRemove={removeOrderLineDiscount}
+          existingDiscount={orderLineDiscount}
           dialogPlacement="bottom-end"
-        />
+        /> */}
       </TableCell>
       <TableCell className={classes.colTotal}>
         <Money

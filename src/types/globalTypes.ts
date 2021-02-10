@@ -562,11 +562,17 @@ export enum OrderDirection {
   DESC = "DESC",
 }
 
+export enum OrderDiscountType {
+  MANUAL = "MANUAL",
+  VOUCHER = "VOUCHER",
+}
+
 export enum OrderErrorCode {
   BILLING_ADDRESS_NOT_SET = "BILLING_ADDRESS_NOT_SET",
   CANNOT_CANCEL_FULFILLMENT = "CANNOT_CANCEL_FULFILLMENT",
   CANNOT_CANCEL_ORDER = "CANNOT_CANCEL_ORDER",
   CANNOT_DELETE = "CANNOT_DELETE",
+  CANNOT_DISCOUNT = "CANNOT_DISCOUNT",
   CANNOT_REFUND = "CANNOT_REFUND",
   CAPTURE_INACTIVE_PAYMENT = "CAPTURE_INACTIVE_PAYMENT",
   CHANNEL_INACTIVE = "CHANNEL_INACTIVE",
@@ -967,7 +973,6 @@ export enum WebhookErrorCode {
 export enum WebhookEventTypeEnum {
   ANY_EVENTS = "ANY_EVENTS",
   CHECKOUT_CREATED = "CHECKOUT_CREATED",
-  CHECKOUT_QUANTITY_CHANGED = "CHECKOUT_QUANTITY_CHANGED",
   CHECKOUT_UPDATED = "CHECKOUT_UPDATED",
   CUSTOMER_CREATED = "CUSTOMER_CREATED",
   FULFILLMENT_CREATED = "FULFILLMENT_CREATED",
@@ -980,7 +985,11 @@ export enum WebhookEventTypeEnum {
   ORDER_FULFILLED = "ORDER_FULFILLED",
   ORDER_FULLY_PAID = "ORDER_FULLY_PAID",
   ORDER_UPDATED = "ORDER_UPDATED",
+  PAGE_CREATED = "PAGE_CREATED",
+  PAGE_DELETED = "PAGE_DELETED",
+  PAGE_UPDATED = "PAGE_UPDATED",
   PRODUCT_CREATED = "PRODUCT_CREATED",
+  PRODUCT_DELETED = "PRODUCT_DELETED",
   PRODUCT_UPDATED = "PRODUCT_UPDATED",
 }
 
@@ -1327,10 +1336,10 @@ export interface OrderAddNoteInput {
   message: string;
 }
 
-export interface OrderDiscountAddInput {
+export interface OrderDiscountCommonInput {
+  valueType: DiscountValueTypeEnum;
   value: any;
-  reason: string;
-  calculationMode?: DiscountValueTypeEnum | null;
+  reason?: string | null;
 }
 
 export interface OrderDraftFilterInput {
@@ -1367,12 +1376,6 @@ export interface OrderFulfillStockInput {
 export interface OrderLineCreateInput {
   quantity: number;
   variantId: string;
-}
-
-export interface OrderLineDiscountAddInput {
-  value: any;
-  reason: string;
-  calculationMode?: DiscountValueTypeEnum | null;
 }
 
 export interface OrderLineInput {

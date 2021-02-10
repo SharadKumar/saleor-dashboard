@@ -12,6 +12,25 @@ export interface OrderLineFragment_variant {
   quantityAvailable: number;
 }
 
+export interface OrderLineFragment_undiscountedUnitPrice_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderLineFragment_undiscountedUnitPrice_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderLineFragment_undiscountedUnitPrice {
+  __typename: "TaxedMoney";
+  currency: string;
+  gross: OrderLineFragment_undiscountedUnitPrice_gross;
+  net: OrderLineFragment_undiscountedUnitPrice_net;
+}
+
 export interface OrderLineFragment_unitPrice_gross {
   __typename: "Money";
   amount: number;
@@ -45,6 +64,7 @@ export interface OrderLineFragment {
   productSku: string;
   quantity: number;
   quantityFulfilled: number;
+  undiscountedUnitPrice: OrderLineFragment_undiscountedUnitPrice;
   unitPrice: OrderLineFragment_unitPrice;
   thumbnail: OrderLineFragment_thumbnail | null;
 }

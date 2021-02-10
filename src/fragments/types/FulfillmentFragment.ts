@@ -14,6 +14,25 @@ export interface FulfillmentFragment_lines_orderLine_variant {
   quantityAvailable: number;
 }
 
+export interface FulfillmentFragment_lines_orderLine_undiscountedUnitPrice_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface FulfillmentFragment_lines_orderLine_undiscountedUnitPrice_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface FulfillmentFragment_lines_orderLine_undiscountedUnitPrice {
+  __typename: "TaxedMoney";
+  currency: string;
+  gross: FulfillmentFragment_lines_orderLine_undiscountedUnitPrice_gross;
+  net: FulfillmentFragment_lines_orderLine_undiscountedUnitPrice_net;
+}
+
 export interface FulfillmentFragment_lines_orderLine_unitPrice_gross {
   __typename: "Money";
   amount: number;
@@ -47,6 +66,7 @@ export interface FulfillmentFragment_lines_orderLine {
   productSku: string;
   quantity: number;
   quantityFulfilled: number;
+  undiscountedUnitPrice: FulfillmentFragment_lines_orderLine_undiscountedUnitPrice;
   unitPrice: FulfillmentFragment_lines_orderLine_unitPrice;
   thumbnail: FulfillmentFragment_lines_orderLine_thumbnail | null;
 }

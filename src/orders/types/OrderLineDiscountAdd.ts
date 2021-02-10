@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { OrderLineDiscountAddInput, OrderErrorCode, OrderEventsEmailsEnum, OrderEventsEnum, FulfillmentStatus, PaymentChargeStatusEnum, OrderStatus, OrderAction, JobStatusEnum } from "./../../types/globalTypes";
+import { OrderDiscountCommonInput, OrderErrorCode, OrderEventsEmailsEnum, OrderEventsEnum, FulfillmentStatus, PaymentChargeStatusEnum, OrderStatus, OrderAction, JobStatusEnum } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: OrderLineDiscountAdd
@@ -367,6 +367,6 @@ export interface OrderLineDiscountAdd {
 }
 
 export interface OrderLineDiscountAddVariables {
-  input: OrderLineDiscountAddInput;
-  id: string;
+  input: OrderDiscountCommonInput;
+  orderLineId: string;
 }

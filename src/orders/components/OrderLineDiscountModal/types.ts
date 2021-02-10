@@ -1,18 +1,7 @@
-import { OrderUrlQueryParams } from "@saleor/orders/urls";
+import { DiscountValueTypeEnum } from "@saleor/types/globalTypes";
 
-export enum OrderDiscountCalculationMode {
-  PERCENTAGE = "percentage",
-  FIXED_AMOUNT = "fixedAmount"
-}
-
-export interface OrderLineDiscountData extends OrderDiscountData {
+export interface OrderLineDiscountData extends OrderDiscountCommonInput {
   orderLineId: string;
-}
-
-export interface OrderDiscountData {
-  type: OrderDiscountCalculationMode;
-  value: number;
-  reason: string;
 }
 
 export const ORDER_DISCOUNT = "add-order-discount";
@@ -22,6 +11,8 @@ export type OrderDiscountType =
   | typeof ORDER_DISCOUNT
   | typeof ORDER_LINE_DISCOUNT;
 
-export interface OrderLineDiscountModalUrlParams extends OrderUrlQueryParams {
-  action: OrderDiscountType;
+export interface OrderDiscountCommonInput {
+  value: number;
+  reason: string;
+  calculationMode: DiscountValueTypeEnum;
 }

@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import { IMoney } from "@saleor/components/Money";
 
-import { OrderDiscountCalculationMode, OrderDiscountData } from "./types";
+import {
+  OrderDiscountCalculationMode,
+  OrderDiscountCommonInput
+} from "./types";
 
 const PERMIL = 0.01;
 const DEFAULT_AMOUNT = 0;
 
 class DiscountCalculator {
   totalMoney: IMoney;
-  discount: OrderDiscountData;
+  discount: OrderDiscountCommonInput;
 
   constructor(totalMoney, orderDiscount) {
     this.totalMoney = totalMoney;
@@ -50,7 +53,7 @@ class DiscountCalculator {
 
 const useDiscountCalculator = (
   totalMoney: IMoney,
-  discount: OrderDiscountData
+  discount: OrderDiscountCommonInput
 ) => new DiscountCalculator(totalMoney, discount);
 
 export default useDiscountCalculator;

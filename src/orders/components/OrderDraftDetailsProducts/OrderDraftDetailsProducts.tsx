@@ -6,9 +6,9 @@ import TableRow from "@material-ui/core/TableRow";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import { AVATAR_MARGIN } from "@saleor/components/TableCellAvatar";
 import {
-  DiscountConsumer,
-  DiscountProviderValues
-} from "@saleor/products/components/OrderDraftDiscountProvider/DiscountProvider";
+  OrderLineDiscountConsumer,
+  OrderLineDiscountProviderValues
+} from "@saleor/products/components/OrderLineDiscountProvider/OrderLineDiscountProvider";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -63,7 +63,7 @@ const useStyles = makeStyles(
   { name: "OrderDraftDetailsProducts" }
 );
 
-interface OrderDraftDetailsProductsProps extends DiscountProviderValues {
+interface OrderDraftDetailsProductsProps {
   lines: OrderDetails_order_lines[];
   onOrderLineChange: (id: string, data: FormData) => void;
   onOrderLineRemove: (id: string) => void;
@@ -109,16 +109,16 @@ const OrderDraftDetailsProducts: React.FC<OrderDraftDetailsProductsProps> = prop
       <TableBody>
         {!!lines.length ? (
           renderCollection(lines, line => (
-            <DiscountConsumer key={line.id}>
-              {(discountProps: DiscountProviderValues) => (
-                <TableLine
-                  {...discountProps}
-                  line={line}
-                  onOrderLineChange={onOrderLineChange}
-                  onOrderLineRemove={onOrderLineRemove}
-                />
-              )}
-            </DiscountConsumer>
+            // <OrderLineDiscountConsumer key={line.id} orderLineId={line.id}>
+            //   {(orderLineDiscountProps: OrderLineDiscountProviderValues) => (
+            <TableLine
+              // {...orderLineDiscountProps}
+              line={line}
+              onOrderLineChange={onOrderLineChange}
+              onOrderLineRemove={onOrderLineRemove}
+            />
+            //   )}
+            // </OrderLineDiscountConsumer>
           ))
         ) : (
           <TableRow>

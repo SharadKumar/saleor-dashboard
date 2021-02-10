@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { OrderEventsEmailsEnum, OrderEventsEnum, FulfillmentStatus, PaymentChargeStatusEnum, OrderStatus, OrderAction, JobStatusEnum } from "./../../types/globalTypes";
+import { OrderDiscountType, DiscountValueTypeEnum, OrderEventsEmailsEnum, OrderEventsEnum, FulfillmentStatus, PaymentChargeStatusEnum, OrderStatus, OrderAction, JobStatusEnum } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL fragment: OrderDetailsFragment
@@ -40,6 +40,22 @@ export interface OrderDetailsFragment_billingAddress {
   postalCode: string;
   streetAddress1: string;
   streetAddress2: string;
+}
+
+export interface OrderDetailsFragment_discounts_amount {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_discounts {
+  __typename: "OrderDiscount";
+  id: string;
+  type: OrderDiscountType;
+  calculationMode: DiscountValueTypeEnum;
+  value: any;
+  reason: string | null;
+  amount: OrderDetailsFragment_discounts_amount;
 }
 
 export interface OrderDetailsFragment_events_relatedOrder {
@@ -93,6 +109,25 @@ export interface OrderDetailsFragment_fulfillments_lines_orderLine_variant {
   quantityAvailable: number;
 }
 
+export interface OrderDetailsFragment_fulfillments_lines_orderLine_undiscountedUnitPrice_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_fulfillments_lines_orderLine_undiscountedUnitPrice_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_fulfillments_lines_orderLine_undiscountedUnitPrice {
+  __typename: "TaxedMoney";
+  currency: string;
+  gross: OrderDetailsFragment_fulfillments_lines_orderLine_undiscountedUnitPrice_gross;
+  net: OrderDetailsFragment_fulfillments_lines_orderLine_undiscountedUnitPrice_net;
+}
+
 export interface OrderDetailsFragment_fulfillments_lines_orderLine_unitPrice_gross {
   __typename: "Money";
   amount: number;
@@ -126,6 +161,7 @@ export interface OrderDetailsFragment_fulfillments_lines_orderLine {
   productSku: string;
   quantity: number;
   quantityFulfilled: number;
+  undiscountedUnitPrice: OrderDetailsFragment_fulfillments_lines_orderLine_undiscountedUnitPrice;
   unitPrice: OrderDetailsFragment_fulfillments_lines_orderLine_unitPrice;
   thumbnail: OrderDetailsFragment_fulfillments_lines_orderLine_thumbnail | null;
 }
@@ -157,6 +193,25 @@ export interface OrderDetailsFragment_lines_variant {
   __typename: "ProductVariant";
   id: string;
   quantityAvailable: number;
+}
+
+export interface OrderDetailsFragment_lines_undiscountedUnitPrice_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_lines_undiscountedUnitPrice_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_lines_undiscountedUnitPrice {
+  __typename: "TaxedMoney";
+  currency: string;
+  gross: OrderDetailsFragment_lines_undiscountedUnitPrice_gross;
+  net: OrderDetailsFragment_lines_undiscountedUnitPrice_net;
 }
 
 export interface OrderDetailsFragment_lines_unitPrice_gross {
@@ -192,6 +247,7 @@ export interface OrderDetailsFragment_lines {
   productSku: string;
   quantity: number;
   quantityFulfilled: number;
+  undiscountedUnitPrice: OrderDetailsFragment_lines_undiscountedUnitPrice;
   unitPrice: OrderDetailsFragment_lines_unitPrice;
   thumbnail: OrderDetailsFragment_lines_thumbnail | null;
 }
@@ -275,6 +331,24 @@ export interface OrderDetailsFragment_totalCaptured {
   currency: string;
 }
 
+export interface OrderDetailsFragment_undiscountedTotal_net {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_undiscountedTotal_gross {
+  __typename: "Money";
+  amount: number;
+  currency: string;
+}
+
+export interface OrderDetailsFragment_undiscountedTotal {
+  __typename: "TaxedMoney";
+  net: OrderDetailsFragment_undiscountedTotal_net;
+  gross: OrderDetailsFragment_undiscountedTotal_gross;
+}
+
 export interface OrderDetailsFragment_user {
   __typename: "User";
   id: string;
@@ -326,6 +400,7 @@ export interface OrderDetailsFragment {
   canFinalize: boolean;
   created: any;
   customerNote: string;
+  discounts: OrderDetailsFragment_discounts[] | null;
   events: (OrderDetailsFragment_events | null)[] | null;
   fulfillments: (OrderDetailsFragment_fulfillments | null)[];
   lines: (OrderDetailsFragment_lines | null)[];
@@ -341,6 +416,7 @@ export interface OrderDetailsFragment {
   actions: (OrderAction | null)[];
   totalAuthorized: OrderDetailsFragment_totalAuthorized;
   totalCaptured: OrderDetailsFragment_totalCaptured;
+  undiscountedTotal: OrderDetailsFragment_undiscountedTotal;
   user: OrderDetailsFragment_user | null;
   userEmail: string | null;
   availableShippingMethods: (OrderDetailsFragment_availableShippingMethods | null)[] | null;

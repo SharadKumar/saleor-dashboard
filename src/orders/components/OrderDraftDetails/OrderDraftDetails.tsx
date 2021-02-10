@@ -3,9 +3,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardTitle from "@saleor/components/CardTitle";
 import {
-  DiscountConsumer,
-  DiscountProviderValues
-} from "@saleor/products/components/OrderDraftDiscountProvider/DiscountProvider";
+  OrderDiscountConsumer,
+  OrderDiscountConsumerProps
+} from "@saleor/products/components/OrderDiscountProvider/OrderDiscountProvider";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -64,16 +64,16 @@ const OrderDraftDetails: React.FC<OrderDraftDetailsProps> = ({
       />
       {maybe(() => order.lines.length) !== 0 && (
         <CardContent>
-          <DiscountConsumer>
-            {discountProps => (
+          <OrderDiscountConsumer>
+            {(orderDiscountProps: OrderDiscountConsumerProps) => (
               <OrderDraftDetailsSummary
                 disabled={disabled}
                 order={order}
                 onShippingMethodEdit={onShippingMethodEdit}
-                {...discountProps}
+                {...orderDiscountProps}
               />
             )}
-          </DiscountConsumer>
+          </OrderDiscountConsumer>
         </CardContent>
       )}
     </Card>
